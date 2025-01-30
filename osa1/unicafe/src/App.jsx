@@ -26,15 +26,24 @@ const Positive = (props) => {
 
 const Statistics = (props) => {
   const { good, neutral, bad } = props
+  if ((good + neutral + bad) == 0) {
+    return (
+      <div>
+        <h2>stats:</h2>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
+  
   return (
     <div>
-    <h2>stats:</h2>
-    <p>good {good}</p>
-    <p>neutral {neutral}</p>
-    <p>bad {bad}</p>
-    <p>all {good + neutral + bad}</p>
-    <Average good={good} neutral={neutral} bad={bad} text="average"/>
-    <Positive good={good} neutral={neutral} bad={bad} text="amount of positive feedback"/>
+      <h2>stats:</h2>
+      <p>good {good}</p>
+      <p>neutral {neutral}</p>
+      <p>bad {bad}</p>
+      <p>all {good + neutral + bad}</p>
+      <Average good={good} neutral={neutral} bad={bad} text="average"/>
+      <Positive good={good} neutral={neutral} bad={bad} text="amount of positive feedback"/>
     </div>
   )
 }
