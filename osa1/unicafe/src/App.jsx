@@ -20,13 +20,16 @@ const Positive = (props) => {
   const { good, neutral, bad } = props
   const positiveAmount = (good / (good + neutral + bad)) * 100
   return (
-    <StatisticLine text="amount of positive feedback" value={`${positiveAmount || 0}%`}/> // `${}` = f"{}" in python
+    <StatisticLine text="positive feedback" value={`${positiveAmount || 0}%`}/> // `${}` = f"{}" in python
   )
 }
 
 const StatisticLine = (props) => {
   return (
-    <p>{props.text} {props.value}</p>
+    <tr>
+    <td>{props.text}</td>
+    <td>{props.value}</td>
+    </tr>
   )
 }
 
@@ -42,12 +45,16 @@ const Statistics = (props) => {
   
   return (
     <div>
-      <StatisticLine text="good" value={good}/>
-      <StatisticLine text="neutral" value={neutral}/>
-      <StatisticLine text="bad" value={bad}/>
-      <StatisticLine text="all" value={good + neutral + bad}/>
-      <Average good={good} neutral={neutral} bad={bad}/>
-      <Positive good={good} neutral={neutral} bad={bad}/>
+      <table>
+        <tbody>
+          <StatisticLine text="good" value={good}/>
+          <StatisticLine text="neutral" value={neutral}/>
+          <StatisticLine text="bad" value={bad}/>
+          <StatisticLine text="all" value={good + neutral + bad}/>
+          <Average good={good} neutral={neutral} bad={bad}/>
+          <Positive good={good} neutral={neutral} bad={bad}/>
+        </tbody>
+      </table>
     </div>
   )
 }
