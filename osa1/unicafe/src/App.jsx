@@ -9,18 +9,24 @@ const Button = (props) => {
 }
 
 const Average = (props) => {
-  const { good, neutral, bad, text } = props
+  const { good, neutral, bad } = props
   const countedAverage = (good - bad) / (good + neutral + bad)
   return (
-    <p>{text} {countedAverage || 0}</p> // if NaN, returns 0 (|| = or):)
+    <StatisticLine text="average" value={countedAverage || 0}/> // if NaN, returns 0 (|| = or):)
   )
 }
 
 const Positive = (props) => {
-  const { good, neutral, bad, text } = props
+  const { good, neutral, bad } = props
   const positiveAmount = (good / (good + neutral + bad)) * 100
   return (
-    <p>{text} {positiveAmount || 0}%</p>
+    <StatisticLine text="amount of positive feedback" value={`${positiveAmount || 0}%`}/> // `${}` = f"{}" in python
+  )
+}
+
+const StatisticLine = (props) => {
+  return (
+    <p>{props.text} {props.value}</p>
   )
 }
 
@@ -29,7 +35,6 @@ const Statistics = (props) => {
   if ((good + neutral + bad) == 0) {
     return (
       <div>
-        <h2>stats:</h2>
         <p>No feedback given</p>
       </div>
     )
@@ -37,13 +42,12 @@ const Statistics = (props) => {
   
   return (
     <div>
-      <h2>stats:</h2>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {good + neutral + bad}</p>
-      <Average good={good} neutral={neutral} bad={bad} text="average"/>
-      <Positive good={good} neutral={neutral} bad={bad} text="amount of positive feedback"/>
+      <StatisticLine text="good" value={good}/>
+      <StatisticLine text="neutral" value={neutral}/>
+      <StatisticLine text="bad" value={bad}/>
+      <StatisticLine text="all" value={good + neutral + bad}/>
+      <Average good={good} neutral={neutral} bad={bad}/>
+      <Positive good={good} neutral={neutral} bad={bad}/>
     </div>
   )
 }
@@ -63,6 +67,7 @@ const App = () => {
         <Button onClick={() => setBad(bad + 1)} text="it was bad ..."/>
       </div>
       <div>
+        <h2>stats:</h2>
         <Statistics good={good} neutral={neutral} bad={bad}/>
       </div>
     </div>
