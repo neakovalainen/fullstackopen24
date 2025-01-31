@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -14,6 +13,15 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(anecdotes.map(anecdote => 0)) // creates a correct sized array
+
+  const addVote = () => {
+    const copy = [...votes] // copy the list, can't update!!!
+    copy[selected] += 1
+
+    setVotes(copy) // copy = vote
+  }
+
 
   return (
     <div>
@@ -21,6 +29,10 @@ const App = () => {
       <br/>
       <button onClick={() => setSelected(Math.floor(Math.random() * 8))}>
       generate a quote
+      </button>
+      <p>has {votes[selected]} votes!</p>
+      <button onClick={addVote}>
+        i kinda like this one
       </button>
     </div>
   )
