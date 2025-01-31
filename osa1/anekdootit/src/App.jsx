@@ -1,5 +1,15 @@
 import { useState } from 'react'
 
+const MostPopular = (props) => {
+  const maximum = Math.max(...props.votes)
+
+  const index = props.votes.indexOf(maximum)
+  
+  return (
+    <p>{props.anecdotes[index]}</p>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -27,13 +37,15 @@ const App = () => {
     <div>
       {anecdotes[selected]}
       <br/>
-      <button onClick={() => setSelected(Math.floor(Math.random() * 8))}>
-      generate a quote
-      </button>
       <p>has {votes[selected]} votes!</p>
       <button onClick={addVote}>
         i kinda like this one
       </button>
+      <button onClick={() => setSelected(Math.floor(Math.random() * 8))}>
+      generate a quote
+      </button>
+      <h1>Anecdote with most votes:</h1>
+      <MostPopular votes={votes} anecdotes={anecdotes}/>
     </div>
   )
 }
