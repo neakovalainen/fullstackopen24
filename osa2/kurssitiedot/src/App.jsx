@@ -49,25 +49,31 @@ const Header = (props) => {
 
 }
 
-const Content = (props) => {
+const Content = ({ parts }) => {
   return (
   <div>
-    <Part part={props.parts[0].name} exercises={props.parts[0].exercises} />
-    <Part part={props.parts[1].name} exercises={props.parts[1].exercises} />
-    <Part part={props.parts[2].name} exercises={props.parts[2].exercises} />
+    {parts.map(part =>
+    <Part key={part.id} name={part.name} exercises={part.exercises} />
+    )}
   </div>
   )
 }
 
 const Part = (props) => {
   return (
-    <p>{props.part} {props.exercises}</p>
+    <p>{props.name} {props.exercises}</p>
   )
 }
 
 const Total = (props) => {
-  <div>
-    <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
-  </div>
+  const initialValue = 0
+  const totalOfExercises = props.parts.reduce(
+    (accumulator, props) => accumulator + props.exercises,
+    initialValue,
+  )
+  return (
+    <h4>there are {totalOfExercises} exercises in total</h4>
+  )
+
 }
 export default App
