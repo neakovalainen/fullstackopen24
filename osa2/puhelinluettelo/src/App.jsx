@@ -16,7 +16,14 @@ const App = () => {
   }
 
   const handleNameAddition = (event) => {
-    const exists = persons.includes(event.target.value)
+    const exists = persons.find(entry => entry.name === event.target.value)
+    console.log(persons)
+    console.log({exists})
+    if (exists) {
+      return (
+        window.alert("Name already exists oh nooooh!")
+      )
+    }
     console.log(event.target.value)
     setNewName(event.target.value)
   }
