@@ -2,18 +2,27 @@ import { useState } from 'react'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: "040-1231244" }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
-  const addName = (event) => {
+  const addPerson = (event) => {
     event.preventDefault()
-    const nameToAdd = {
-      name: newName
-    }
-    setPersons(persons.concat(nameToAdd))
-    setNewName('') 
+    if (newName && newNumber) {
+      const personToAdd = {
+        name: newName,
+        number: newNumber
+      }
+      setPersons(persons.concat(personToAdd))
+      setNewName('')
+      setNewNumber('')
+    } 
+    else {
+      window.alert("Add a name and a number!!!!")
+    } 
   }
+
 
   const handleNameAddition = (event) => {
     const exists = persons.find(entry => entry.name === event.target.value)
@@ -27,11 +36,15 @@ const App = () => {
     console.log(event.target.value)
     setNewName(event.target.value)
   }
+  const handleNumberAddition = (event) => {
+    console.log(event.target.value)
+    setNewNumber(event.target.value)
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
+      <form onSubmit={addPerson}>
         <div>
           name: 
           <input 
@@ -40,13 +53,19 @@ const App = () => {
           />
         </div>
         <div>
+          number:  
+          <input 
+          value={newNumber}
+          onChange={handleNumberAddition}/>
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <ul>
         {persons.map(person =>
-          <li key={person.name}>{person.name}</li>
+          <li key={person.name}>{person.name} {person.number}</li>
         )}
       </ul>
     </div>
