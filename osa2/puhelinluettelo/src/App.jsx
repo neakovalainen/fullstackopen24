@@ -57,6 +57,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [currentFilter, setCurrentFilter] = useState('')
+  const [confirmationMessage, setconfirmationMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -80,6 +81,12 @@ const App = () => {
       personService
       .update(exists.id, personToAdd)
       .then(updatedPerson => {
+        setconfirmationMessage(
+          `The number for '${updatedPerson.name}' has been changed`
+        )
+        setTimeout(() => {
+          setconfirmationMessage(null)
+        }, 3000)
         setPersons(persons.map(person => person.name == updatedPerson.name ? updatedPerson : person))
         setNewName('')
         setNewNumber('')
@@ -89,6 +96,12 @@ const App = () => {
     personService
       .create(personToAdd)
       .then(returnedPerson => {
+        setconfirmationMessage(
+          'A new person has been added!'
+        )
+        setTimeout(() => {
+          setconfirmationMessage(null)
+        }, 3000)
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
@@ -122,12 +135,33 @@ const App = () => {
     window.confirm("Sure you want to delete?")
     personService
       .deletion(id)
-      .then(setPersons(persons.filter(person => person.id !== id)))
+      .then(() => {
+        setconfirmationMessage(
+          'the person was deleted successfully'
+        )
+        setTimeout(() => {
+          setconfirmationMessage(null)
+        }, 3000)
+        setPersons(persons.filter(person => person.id !== id))
+  })
+  }
+  
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+
+    return (
+      <div className="confirmationmessage">
+        {message}
+      </div>
+    )
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={confirmationMessage} />
       <FilterPeople currentFilter={currentFilter} addFiltering={addFiltering} />
       <PersonAddition addPerson={addPerson} newName={newName}
         handleNameAddition={handleNameAddition} newNumber={newNumber}
