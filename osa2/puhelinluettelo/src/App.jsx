@@ -69,11 +69,23 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (newName && newNumber) {
-      const personToAdd = {
-        name: newName,
-        number: newNumber
-      }
+    const personToAdd = {
+      name: newName,
+      number: newNumber
+    }
+    const exists = persons.find(person => person.name === newName)
+    console.log(exists)
+    if (exists) {
+      window.confirm("Name already exists, want to replace the old number?")
+      personService
+      .update(exists.id, personToAdd)
+      .then(updatedPerson => {
+        setPersons(persons.map(person => person.name == updatedPerson.name ? updatedPerson : person))
+        setNewName('')
+        setNewNumber('')
+      })
+    }
+    else if (newName && newNumber) {
     personService
       .create(personToAdd)
       .then(returnedPerson => {
@@ -88,20 +100,10 @@ const App = () => {
   }
 
   const handleNameAddition = (event) => {
-    const exists = persons.find(entry => entry.name === event.target.value)
-    console.log(persons)
-    console.log({ exists })
-    if (exists) {
-      return (
-        window.alert("Name already exists oh nooooh!")
-      )
-    }
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
   const handleNumberAddition = (event) => {
-    console.log(event.target.value)
     setNewNumber(event.target.value)
   }
 
@@ -110,7 +112,7 @@ const App = () => {
   }
 
   const handleFiltering = (value) => {
-    if (value.name.toUpperCase().includes(currentFilter.toUpperCase())) {
+    if (value.name?.toUpperCase().includes(currentFilter.toUpperCase())) {
       return value
     }
   }
