@@ -58,6 +58,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [currentFilter, setCurrentFilter] = useState('')
   const [confirmationMessage, setconfirmationMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -90,6 +91,14 @@ const App = () => {
         setPersons(persons.map(person => person.name == updatedPerson.name ? updatedPerson : person))
         setNewName('')
         setNewNumber('')
+      })
+      .catch(error => {
+        setErrorMessage(
+          'Person not updated, try again'
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        },5000)
       })
     }
     else if (newName && newNumber) {
@@ -158,10 +167,23 @@ const App = () => {
     )
   }
 
+  const ErrorNotif = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+
+    return (
+      <div className="errormessage">
+      {message}
+      </div>
+    )
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
       <Notification message={confirmationMessage} />
+      <ErrorNotif message={errorMessage} />
       <FilterPeople currentFilter={currentFilter} addFiltering={addFiltering} />
       <PersonAddition addPerson={addPerson} newName={newName}
         handleNameAddition={handleNameAddition} newNumber={newNumber}
