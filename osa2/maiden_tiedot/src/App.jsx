@@ -1,3 +1,5 @@
+// did ex 2.20 and code should work, but couldn't get authorized access to openweathermap
+
 import { useState, useEffect } from 'react'
 import countryInfo from './services/countries'
 
@@ -52,7 +54,29 @@ const Countries = (props) => {
 }
 
 const AdditionalInfo = (props) => {
-  console.log('was called')
+  const [weather, setWeather] = useState(null)
+  const [lat, lon] = props.filtered.latlng
+  const kelvinsToCelsius = K => {
+    return K - 273.15
+  }
+  useEffect(() => {
+    countryInfo
+    .getWeather(lat, lon)
+    .then(weather => {
+      setWeather(weather)
+    })
+  })
+  console.log(weather)
+
+  const weather_details = weather
+    ? (<>
+      <h4> Weather in {props.filtered.capital[0]}</h4>
+      <p>Temperature {kelvinsToCelsius(weather.current.temp)}</p>
+      <p><img src={`http://openweathermap.org/img/wn/${weather.current.weather.icon}.png`} alt={current.weather.main} /></p>
+      <p>Wind {weather.current.wind_speed}m/s</p>
+    </>)
+    : null
+
   return (
     <div>
     <h2> {props.filtered.name.common} </h2>
@@ -67,6 +91,7 @@ const AdditionalInfo = (props) => {
       )}
     </ul>
     <p id="biggerflag">{props.filtered.flag}</p>
+    { weather_details }
   </div>
   )
 }
