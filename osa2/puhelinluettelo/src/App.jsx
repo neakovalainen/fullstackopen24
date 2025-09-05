@@ -78,28 +78,32 @@ const App = () => {
     const exists = persons.find(person => person.name === newName)
     console.log(exists)
     if (exists) {
-      window.confirm("Name already exists, want to replace the old number?")
-      personService
-      .update(exists.id, personToAdd)
-      .then(updatedPerson => {
-        setconfirmationMessage(
-          `The number for '${updatedPerson.name}' has been changed`
-        )
-        setTimeout(() => {
-          setconfirmationMessage(null)
-        }, 3000)
-        setPersons(persons.map(person => person.name == updatedPerson.name ? updatedPerson : person))
+      if (window.confirm("Name already exists, want to replace the old number?")) {
+        personService
+        .update(exists.id, personToAdd)
+        .then(updatedPerson => {
+          setconfirmationMessage(
+            `The number for '${personToAdd.name}' has been changed`
+          )
+          setTimeout(() => {
+            setconfirmationMessage(null)
+          }, 3000)
+          setPersons(persons.map(person => person.name == updatedPerson.name ? updatedPerson : person))
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => {
+          setErrorMessage(
+            'Person not updated, try again'
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          },5000)
+        })
+      } else {
         setNewName('')
         setNewNumber('')
-      })
-      .catch(error => {
-        setErrorMessage(
-          'Person not updated, try again'
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        },5000)
-      })
+      }
     }
     else if (newName && newNumber) {
     personService
