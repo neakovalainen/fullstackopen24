@@ -119,6 +119,9 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+      .catch(error => {
+        setErrorMessage(error.response.data.error)
+      })
     }
     else {
       window.alert("Add a name and a number!!!!")
