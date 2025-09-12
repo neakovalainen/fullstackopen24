@@ -51,6 +51,15 @@ test.only('correct amount of blogs are returned', async () => {
   assert.strictEqual(response.body.length, initialBLogs.length)
 
 })
+// luo listan avaimista ja tarkistaa, että ensimmäisellä
+// blogilla on kenttä id
+// voi muuttaa tarkastamaan, että kenttä löytyy kaikilta
+// mutta uskon tämän olevan tarpeeksi tässä kohtaa
+test.only('blogs have id fields', async () => {
+  const response = await api.get('/api/blogs')
+  const keys = response.body.map(blog => Object.keys(blog))
+  assert(keys[0].includes('id')) 
+})
 
 after(async () => {
   await mongoose.connection.close()
