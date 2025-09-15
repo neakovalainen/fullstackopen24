@@ -11,21 +11,26 @@ const totalLikes = (blogs) => {
 const favouriteBlog = (blogs) => {
   const returned =  blogs.reduce((mostliked, blog) => {
     if (mostliked.likes < blog.likes) {
-      newliked = {
-        ...blog
-      }
-      return newliked
-    } else {
-      return mostliked
+      return { ...blog }
     }
+    return mostliked
   }, blogs[0])
   return returned
 }
 
-/*const mostBlogs = (blogs) => {
+const mostBlogs = (blogs) => {
   const authors = blogs.map(blog => blog.author)
-  const amouts = _.countBy(authors)
-  console.log(amouts)
+
+  const uniqueAuthors = Array.from(new Set(authors))
+  const returned = uniqueAuthors.reduce((mostBlogs, author) => {
+    const blogCount = authors.filter(blogAuthor => blogAuthor === author).length
+    if (mostBlogs.blogCount < blogCount) {
+      return { author, blogCount }
+    }
+    return mostBlogs
+  }, { author: undefined, blogCount: 0 })
+
+  return returned
 }
 
 
@@ -55,8 +60,8 @@ const bloglist = [
     __v: 0
 }
 ]
-mostBlogs(bloglist)
-*/
+console.log(mostBlogs(bloglist))
+
 module.exports = {
   dummy,
   totalLikes,
