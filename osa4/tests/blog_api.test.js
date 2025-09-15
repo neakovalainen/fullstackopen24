@@ -61,6 +61,28 @@ test.only('blogs have id fields', async () => {
   assert(keys[0].includes('id')) 
 })
 
+test.only('blogs can be added', async () => {
+  const newBlog = {
+    title: 'it is not good to give up, i think?',
+    author: 'somebodythatiusedtoknow',
+    url: 'www.idkyet.yey',
+    likes: 15
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const titles = response.body.map(returned => returned.title)
+
+  assert.strictEqual(response.body.length, initialBLogs.length + 1)
+  assert(titles.includes('it is not good to give up, i think?'))
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
