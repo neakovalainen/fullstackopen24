@@ -104,6 +104,21 @@ test.only('if blog likes not specified, they are put to 0', async () => {
   assert.strictEqual(likes[likes.length - 1], 0)
 })
 
+test.only('blog without a title and an url is not saved', async () => {
+  const newBlog = {
+    author: 'a nobody',
+    likes: 97
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+
+  assert.strictEqual(response.body.length, initialBLogs.length)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
