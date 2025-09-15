@@ -19,21 +19,40 @@ const favouriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-  const authors = blogs.map(blog => blog.author)
+  const authors = blogs.map(blog => blog.author) //lista authoreista
 
-  const uniqueAuthors = Array.from(new Set(authors))
-  const returned = uniqueAuthors.reduce((mostBlogs, author) => {
-    const blogCount = authors.filter(blogAuthor => blogAuthor === author).length
-    if (mostBlogs.blogCount < blogCount) {
+  const uniqueAuthors = Array.from(new Set(authors)) // tekee listan jossa jokaist vain yksi
+
+  const returned = uniqueAuthors.reduce((mostBlogs, author) => { //käy läpi kaikki authorit mutta vaik kerran jokaisen
+    const blogCount = authors.filter(blogAuthor => blogAuthor === author).length // jokaisesta authorista kerrallaan lista, jonka pituus on blogien määrä
+    if (mostBlogs.blogCount < blogCount) { //palautetaan blogien määrän perusteella suurempi
       return { author, blogCount }
     }
     return mostBlogs
-  }, { author: undefined, blogCount: 0 })
+  }, { author: undefined, blogCount: 0 }) //palautettava ja verrattava muoto
 
   return returned
 }
 
+const mostLikes = (blogs) => {
+  const authors = blogs.map(blog => blog.author)
 
+  const uniqueAuthors = Array.from(new Set(authors))
+
+  const returned = uniqueAuthors.reduce((mostBlogs, author) => {
+    const likes = blogs
+      .filter(blog => blog.author === author) // filteröidään halutun authorin blogit
+      .map(blog => blog.likes) // lista blogien tykkyksistä
+      .reduce((accumulatedLikes, blogLikes) => accumulatedLikes + blogLikes, 0) // tykkäykset summana
+
+    if (mostBlogs.likes < likes) {
+      return { author, likes }
+    }
+    return mostBlogs
+  }, { author: undefined, likes: 0 })
+
+  return returned
+}
 const bloglist = [
   {
     _id: '5a422aa71b54a676234d17f8',
@@ -60,7 +79,7 @@ const bloglist = [
     __v: 0
 }
 ]
-console.log(mostBlogs(bloglist))
+console.log(mostLikes(bloglist))
 
 module.exports = {
   dummy,
