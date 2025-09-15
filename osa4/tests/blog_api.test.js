@@ -83,6 +83,27 @@ test.only('blogs can be added', async () => {
   assert(titles.includes('it is not good to give up, i think?'))
 })
 
+test.only('if blog likes not specified, they are put to 0', async () => {
+  const newBlog = {
+    title: 'it is not good to give up, i think?',
+    author: 'somebodythatiusedtoknow',
+    url: 'www.idkyet.yey',
+    likes: 0
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  console.log(response.body)
+  const likes = response.body.map(returned => returned.likes)
+  console.log('likes:', likes)
+  assert.strictEqual(likes[likes.length - 1], 0)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
