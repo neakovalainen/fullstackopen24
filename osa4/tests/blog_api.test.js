@@ -119,6 +119,21 @@ test.only('blog without a title and an url is not saved', async () => {
   assert.strictEqual(response.body.length, initialBLogs.length)
 })
 
+test.only('a blog can be deleted', async () => {
+  const blogsInBeginning = await Blog.find({})
+  const blogToDelete = blogsInBeginning[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsInEnd = await Blog.find({})
+  const titles = blogsInEnd.map(blog => blog.title)
+
+  assert(!titles.includes(blogToDelete.title))
+  assert.strictEqual(blogsInEnd.length, initialBLogs.length -1)
+
+})
 after(async () => {
   await mongoose.connection.close()
 })
