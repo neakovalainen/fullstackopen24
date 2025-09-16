@@ -131,9 +131,32 @@ test.only('a blog can be deleted', async () => {
   const titles = blogsInEnd.map(blog => blog.title)
 
   assert(!titles.includes(blogToDelete.title))
-  assert.strictEqual(blogsInEnd.length, initialBLogs.length -1)
+  assert.strictEqual(blogsInEnd.length, initialBLogs.length -1) //tarkistaisi onko sama olio
+})
+
+test.only('a specific blog can be edited', async () => {
+  const blogsInBeginning = await Blog.find({})
+  const blogtoChange = blogsInBeginning[0]
+  const changedBlog = {
+    title: 'it is not good to give up',
+    author: 'somebody',
+    url: 'www.idk.yey',
+    likes: 99
+  }
+  await api
+    .put(`/api/blogs/${blogtoChange.id}`)
+    .send(changedBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  const likes = response.body.map(blog => blog.likes)
+
+  assert.strictEqual(response.body.length, initialBLogs.length)
+  assert(likes.includes(99))
 
 })
+
 after(async () => {
   await mongoose.connection.close()
 })
