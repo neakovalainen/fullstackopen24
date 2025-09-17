@@ -38,14 +38,14 @@ beforeEach(async () => {
   await blogObject.save()
 })
 
-test.only('blogs are returned as json', async () => {
+test('blogs are returned as json', async () => {
   await api
     .get('/api/blogs')
     .expect(200)
     .expect('COntent-Type', /application\/json/)
 })
 
-test.only('correct amount of blogs are returned', async () => {
+test('correct amount of blogs are returned', async () => {
   const response = await api.get('/api/blogs')
 
   assert.strictEqual(response.body.length, initialBLogs.length)
@@ -55,13 +55,13 @@ test.only('correct amount of blogs are returned', async () => {
 // blogilla on kenttä id
 // voi muuttaa tarkastamaan, että kenttä löytyy kaikilta
 // mutta uskon tämän olevan tarpeeksi tässä kohtaa
-test.only('blogs have id fields', async () => {
+test('blogs have id fields', async () => {
   const response = await api.get('/api/blogs')
   const keys = response.body.map(blog => Object.keys(blog))
   assert(keys[0].includes('id')) 
 })
 
-test.only('blogs can be added', async () => {
+test('blogs can be added', async () => {
   const newBlog = {
     title: 'it is not good to give up, i think?',
     author: 'somebodythatiusedtoknow',
@@ -83,7 +83,7 @@ test.only('blogs can be added', async () => {
   assert(titles.includes('it is not good to give up, i think?'))
 })
 
-test.only('if blog likes not specified, they are put to 0', async () => {
+test('if blog likes not specified, they are put to 0', async () => {
   const newBlog = {
     title: 'it is not good to give up, i think?',
     author: 'somebodythatiusedtoknow',
@@ -104,7 +104,7 @@ test.only('if blog likes not specified, they are put to 0', async () => {
   assert.strictEqual(likes[likes.length - 1], 0)
 })
 
-test.only('blog without a title and an url is not saved', async () => {
+test('blog without a title and an url is not saved', async () => {
   const newBlog = {
     author: 'a nobody',
     likes: 97
@@ -119,7 +119,7 @@ test.only('blog without a title and an url is not saved', async () => {
   assert.strictEqual(response.body.length, initialBLogs.length)
 })
 
-test.only('a blog can be deleted', async () => {
+test('a blog can be deleted', async () => {
   const blogsInBeginning = await Blog.find({})
   const blogToDelete = blogsInBeginning[0]
 
@@ -134,7 +134,7 @@ test.only('a blog can be deleted', async () => {
   assert.strictEqual(blogsInEnd.length, initialBLogs.length -1) //tarkistaisi onko sama olio
 })
 
-test.only('a specific blog can be edited', async () => {
+test('a specific blog can be edited', async () => {
   const blogsInBeginning = await Blog.find({})
   const blogtoChange = blogsInBeginning[0]
   const changedBlog = {
