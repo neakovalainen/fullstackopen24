@@ -60,7 +60,7 @@ test.only('cannot create a new user, if username too short', async () => {
 
   const usersInEnd = await User.find({})
   const usersMapped = usersInEnd.map(u => u.toJSON())
-
+  assert(result.body.error.includes('expected `username` to be unique'))
   assert.strictEqual(usersMapped.length, usersInBeginning.length)
 })
 
