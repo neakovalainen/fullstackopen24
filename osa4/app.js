@@ -11,6 +11,8 @@ const app = express()
 mongoose.connect(config.mongoUrl)
 
 app.use(express.json())
+
+app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)

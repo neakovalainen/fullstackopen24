@@ -12,5 +12,16 @@ const errorHandler = (error, request, response, next) => {
     }
     next(error)
 }
+// !!! ei saa returnaa, muuten next() ei kutsuta ja mikään ei toimi
+// niin saa ainoastaan tehdä error handlerissa
+const tokenExtractor = (request, response, next) => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    request.token = authorization.replace('Bearer ','')
+  }
+  request.token = null
+  
+  next()
+}
 
-module.exports = { errorHandler } 
+module.exports = { errorHandler, tokenExtractor } 
