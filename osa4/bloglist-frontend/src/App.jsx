@@ -11,6 +11,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [error, setError] = useState(null)
+  const [confirmation, setConfirmation] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -41,10 +43,14 @@ const App = () => {
       setUsername('')
       setPassword('')
       console.log(user)
-    } catch {
-      setErrorMessage('wrong credentials oh noh')
+      setConfirmation('logged in successfully')
       setTimeout(() => {
-        setErrorMessage(null)
+        setConfirmation(null)
+      }, 3000)
+    } catch {
+      setError('wrong credentials oh noh')
+      setTimeout(() => {
+        setError(null)
       }, 5000)
     }
   }
@@ -62,19 +68,48 @@ const App = () => {
     try {
       const blog = await blogService.create({ title, author, url })
       setBlogs(blogs.concat(blog))
+      setConfirmation(`blog: '${title}' has been ceated succesfully`)
+      setTimeout(() => {
+        setConfirmation(null)
+      }, 5000)
       setTitle('')
       setAuthor('')
       setUrl('')
     } catch {
-      setErrorMessage(' blog not saved, error occurred')
+      setError(' blog not saved, error occurred')
       setTimeout(() => {
-        setErrorMessage(null)
+        setError(null)
       }, 5000)
     }
   }
+
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+    return (
+      <div className="confirmation">
+        {message}
+      </div>
+    )
+  }
+
+  const Error = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+    return (
+      <div className="error">
+        {message}
+      </div>
+    )
+  }
+
   if (user === null) {
     return (
       <div>
+      <Notification message={confirmation} />
+      <Error message={error} />
         <h1> log in from here! </h1>
         <form onSubmit={handleLogin}>
           <div>
@@ -104,6 +139,8 @@ const App = () => {
     }
     return (
       <div>
+        <Notification message={confirmation} />
+        <Error message={error} />
         <h1>blogs</h1>
         <form onSubmit={(event) => handleLogout(event)}>
           <button type="submit">log out</button>
