@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +17,7 @@ const App = () => {
   const [url, setUrl] = useState('')
   const [error, setError] = useState(null)
   const [confirmation, setConfirmation] = useState(null)
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -61,6 +66,10 @@ const App = () => {
     setUser(null)
     setPassword('')
     setUsername('')
+    setConfirmation('logged out successfully :3')
+    setTimeout(() => {
+      setConfirmation(null)
+    }, 3000)
   }
 
   const createBlog = async event => {
@@ -68,7 +77,7 @@ const App = () => {
     try {
       const blog = await blogService.create({ title, author, url })
       setBlogs(blogs.concat(blog))
-      setConfirmation(`blog: '${title}' has been ceated succesfully`)
+      setConfirmation(`blog: '${title}' has been created succesfully<33`)
       setTimeout(() => {
         setConfirmation(null)
       }, 5000)
@@ -104,87 +113,50 @@ const App = () => {
       </div>
     )
   }
-
-  if (user === null) {
-    return (
-      <div>
-      <Notification message={confirmation} />
-      <Error message={error} />
-        <h1> log in from here! </h1>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label>
-              username
-              <input
-                type="type"
-                value={username}
-                onChange={({ target }) => setUsername(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              password
-              <input
-                type="password"
-                value={password}
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </label>
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
-    )
-    }
+  if ( user === null ) {
     return (
       <div>
         <Notification message={confirmation} />
         <Error message={error} />
-        <h1>blogs</h1>
-        <form onSubmit={(event) => handleLogout(event)}>
-          <button type="submit">log out</button>
-        </form>
-        <p>logged in as {user.username}</p>
-        <h2>create new</h2>
-        <form onSubmit={(event) => createBlog(event)}>
-          <div>
-            <label>
-              title:
-              <input
-                type="type"
-                value={title}
-                onChange={({ target }) => setTitle(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              author:
-              <input
-                type="type"
-                value={author}
-                onChange={({ target }) => setAuthor(target.value)}  
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              url:
-              <input
-                type="type"
-                value={url}
-                onChange={({ target }) => setUrl(target.value)}
-              />
-            </label>
-          </div>
-          <button type="submit">create blog</button>
-        </form>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
-      </div> 
+        <Togglable buttonLabel='login'>
+            <LoginForm
+              username={username}
+              password={password}
+              handleLogin={handleLogin}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+            />
+        </Togglable>
+      </div>
     )
+  }
+  return (
+    <div>
+        <Notification message={confirmation} />
+        <Error message={error} />
+        <div>
+          <h3>blogs</h3>
+          <p> {user.username} has logged in</p>
+          <form onSubmit={(event) => handleLogout(event)}>
+            <button type="submit">log out</button>
+          </form>
+          <Togglable buttonLabel="new blog">
+            <BlogForm
+              title={title}
+              author={author}
+              url={url}
+              onSubmit={(event) => createBlog(event)}
+              changeTitle={({ target }) => setTitle(target.value)}
+              changeAuthor={({ target }) => setAuthor(target.value)}
+              changeUrl={({ target }) => setUrl(target.value)}
+            />
+          </Togglable>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
+        </div> 
+    </div>
+  )
 }
 
 export default App
