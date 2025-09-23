@@ -17,7 +17,7 @@ const App = () => {
   const [url, setUrl] = useState('')
   const [error, setError] = useState(null)
   const [confirmation, setConfirmation] = useState(null)
-  const [loginVisible, setLoginVisible] = useState(false)
+  const [showAll, setShowAll] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -152,7 +152,7 @@ const App = () => {
             />
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} user={user}/>
           )}
         </div> 
     </div>
