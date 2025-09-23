@@ -70,19 +70,29 @@ blogRouter.delete('/:id', middleware.userExtractor, async (request, response) =>
 })
 
 blogRouter.put('/:id', async (request, response) => {
-  const body = request.body
+  console.log("Got a request with id:", request.params.id)
 
+  const body = request.body
   const blog = await Blog.findById(request.params.id)
   if (!blog) {
     return response.status(404).end()
   }
-  blog.title = body.title
-  blog.author = body.author
-  blog.url = body.url
-  blog.likes = body.likes
-  const savedBlog = await blog.save()
-  response.status(201).json(savedBlog)
-
+  console.log('this is the blog', blog)
+  console.log('body', body)
+  //const savedBlog = await blog.save()
+  const newBlog = await Blog.updateOne({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      user: blog.user
+    },
+    { $set: {
+      likes: blog.likes + 1
+    }}
+  )
+  console.log('uusblog', newBlog)
+  //response.status(201).json(request.body)
+  return response.status(204).end()
 })
 
 module.exports = blogRouter
