@@ -76,7 +76,7 @@ const App = () => {
     try {
       const blog = await blogService.create({ title, author, url })
       setBlogs(blogs.concat(blog))
-      setConfirmation(`blog: '${title}' has been created succesfully<33`)
+      setConfirmation(`blog: '${title}' has been created successfully<33`)
       setTimeout(() => {
         setConfirmation(null)
       }, 5000)

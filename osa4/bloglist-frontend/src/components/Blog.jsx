@@ -7,12 +7,14 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
 
   const toggleShow = () => {
     setShowAll(!showAll)
+    console.log(blog)
+    console.log(blogs)
   }
   const like = async event => {
     event.preventDefault()
     try {
-      const { title, author, url, id } = blog
-      const blogNew = await blogService.like({ title, author, url, likes, id })
+      const { title, author, url, id, user } = blog
+      const blogNew = await blogService.like({ title, author, url, likes, id, user })
       setLikes(likes + 1)
       setBlogs(blogs.map(blog => blog.id !== blogNew.id ? blog : blogNew))
     } catch {
@@ -38,7 +40,7 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
       <p>{blog.url}</p>
       <p>likes: {likes}</p>
       <button onClick={like}>like</button>
-      <p>{user.username}</p>
+      <p>{blog.user.username}</p>
     </div> 
   )
 }
