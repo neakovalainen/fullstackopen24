@@ -1,14 +1,49 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
-test('renders title', () => {
-  const blog = {
+const blog = {
     title: 'a good title',
     author: 'a good author',
-    url: 'a great url'
+    url: 'a great url',
+    likes: 10,
+    user: {
+      username: 'mina'}
   }
+
+test('renders title', () => {
   render(<Blog blog={blog}/>)
 
   const element = screen.getByText('a good title', { exact: false })
   expect(element).toBeDefined()
+})
+
+test('clicking the button makes url visible', async () => {
+  render(<Blog user={'mina'} blog={blog}/>)
+  const user = userEvent.setup()
+  const button = screen.getByText('view')
+  await user.click(button)
+
+  const element = screen.getByText('a great url', { exact: false })
+  expect(element).toBeVisible()
+})
+
+test('clicking the button makes likes visible', async () => {
+  render(<Blog user={'mina'} blog={blog}/>)
+  const user = userEvent.setup()
+  const button = screen.getByText('view')
+  await user.click(button)
+
+  const element = screen.getByText('likes:', { exact: false })
+  expect(element).toBeVisible()
+})
+
+test('clicking the button makes user visible', async () => {
+  render(<Blog user={'mina'} blog={blog}/>)
+  const user = userEvent.setup()
+  const button = screen.getByText('view')
+  await user.click(button)
+
+  const element = screen.getByText('mina', { exact: false })
+  expect(element).toBeVisible()
 })
