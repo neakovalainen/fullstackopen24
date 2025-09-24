@@ -22,11 +22,17 @@ const create = async newObject => {
 }
 
 const like = async changedObject => {
-  console.log(changedObject)
   const response = await axios.put(`/api/blogs/${changedObject.id}`,changedObject)
-  // console.log('trying to like', response.data)
-  console.log("response:", response)
-  return {...changedObject, likes: changedObject.likes + 1}
+  console.log('trying to like', response.data)
+  return { ...changedObject, likes: changedObject.likes + 1 }
 }
-
-export default { getAll, setToken, create, like }
+const remove = async id => {
+  console.log('id in axios', id.id)
+  console.log('came to axios part!')
+  const config = {
+    headers: { Authorization: token }
+  }
+  const response = await axios.delete(`${baseUrl}/${id.id}`, config)
+  return response.data
+}
+export default { getAll, setToken, create, like, remove }

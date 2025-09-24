@@ -10,6 +10,7 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
     console.log(blog)
     console.log(blogs)
   }
+
   const like = async event => {
     event.preventDefault()
     try {
@@ -21,30 +22,52 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
       console.log('big error oh noh')
     }
   }
+
+  const remove = async event => {
+    event.preventDefault()
+    console.log('id in front', blog.id)
+    if (window.confirm('ooks varma et haluut poistaa? :((')) {
+      try {
+        await blogService.remove({ id: blog.id })
+        setBlogs(blogs.filter(blogToFilter => blogToFilter.id !== blog.id))
+      } catch {
+        console.log('error when deletings')
+      }
+    }
+  }
+
   if (showAll === false)
     return (
       <div>
-        {blog.title} {blog.author} 
+        {blog.title} {blog.author}
         <button onClick={toggleShow}>
           view
         </button>
-      </div> 
+      </div>
     )
   return (
     <div className="blogstyle">
       <p>{blog.title}, by: {blog.author}
-      <button onClick={toggleShow}>
-        hide
-      </button>
+        <button onClick={toggleShow}>
+          hide
+        </button>
       </p>
-      <p>{blog.url}</p>
+      <p>url: {blog.url}</p>
       <p>likes: {likes}</p>
       <button onClick={like}>like</button>
       <p>{blog.user.username}</p>
-    </div> 
+      {
+        blog.user.username === user.username
+          ?
+          (
+            <button onClick={remove}>
+              delete blog
+            </button>
+          )
+          : null
+      }
+    </div>
   )
 }
- 
-
 
 export default Blog

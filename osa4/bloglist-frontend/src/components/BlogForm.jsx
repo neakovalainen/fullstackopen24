@@ -1,12 +1,12 @@
-const BlogForm = ({ 
-  onSubmit, 
-  title, 
-  author, 
-  url, 
-  changeTitle, 
-  changeAuthor, 
+const BlogForm = ({
+  onSubmit,
+  title,
+  author,
+  url,
+  changeTitle,
+  changeAuthor,
   changeUrl
-  } ) => {
+} ) => {
   return (
     <div>
       <h2>create a new blog</h2>
@@ -27,7 +27,7 @@ const BlogForm = ({
             <input
               type="type"
               value={author}
-              onChange={changeAuthor}  
+              onChange={changeAuthor}
             />
           </label>
         </div>

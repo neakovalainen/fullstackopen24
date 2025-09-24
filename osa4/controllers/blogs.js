@@ -49,6 +49,7 @@ blogRouter.post('/', middleware.userExtractor, async (request, response) => {
 })
 
 blogRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
+  console.log('id in back', request.params.id)
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
   if (!decodedToken.id) {
     return response.status(401).json({error: 'invalid token'})
@@ -65,7 +66,7 @@ blogRouter.delete('/:id', middleware.userExtractor, async (request, response) =>
     return response.status(204).end()
   } else {
     console.log(blog.user)
-    return response.status('401').json({ error: 'invalid token or user'})
+    return response.status(401).json({ error: 'invalid token or user'})
   }
 })
 

@@ -4,7 +4,7 @@ const LoginForm = ({
   password,
   handlePasswordChange,
   handleUsernameChange
-  }) => {
+}) => {
   return (
     <div>
       <h2> log in from here! </h2>

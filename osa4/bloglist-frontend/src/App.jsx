@@ -21,7 +21,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -117,43 +117,44 @@ const App = () => {
       <div>
         <Notification message={confirmation} />
         <Error message={error} />
+        <h2>log in by pressing the button below</h2>
         <Togglable buttonLabel='login'>
-            <LoginForm
-              username={username}
-              password={password}
-              handleLogin={handleLogin}
-              handleUsernameChange={({ target }) => setUsername(target.value)}
-              handlePasswordChange={({ target }) => setPassword(target.value)}
-            />
+          <LoginForm
+            username={username}
+            password={password}
+            handleLogin={handleLogin}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+          />
         </Togglable>
       </div>
     )
   }
   return (
     <div>
-        <Notification message={confirmation} />
-        <Error message={error} />
-        <div>
-          <h3>blogs</h3>
-          <p> {user.username} has logged in</p>
-          <form onSubmit={(event) => handleLogout(event)}>
-            <button type="submit">log out</button>
-          </form>
-          <Togglable buttonLabel="new blog">
-            <BlogForm
-              title={title}
-              author={author}
-              url={url}
-              onSubmit={(event) => createBlog(event)}
-              changeTitle={({ target }) => setTitle(target.value)}
-              changeAuthor={({ target }) => setAuthor(target.value)}
-              changeUrl={({ target }) => setUrl(target.value)}
-            />
-          </Togglable>
-          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} user={user} blogs={blogs} setBlogs={setBlogs}/>
-          )}
-        </div> 
+      <Notification message={confirmation} />
+      <Error message={error} />
+      <div>
+        <h1>blogs</h1>
+        <p> {user.username} has logged in</p>
+        <form onSubmit={(event) => handleLogout(event)}>
+          <button type="submit">log out</button>
+        </form>
+        <Togglable buttonLabel="new blog">
+          <BlogForm
+            title={title}
+            author={author}
+            url={url}
+            onSubmit={(event) => createBlog(event)}
+            changeTitle={({ target }) => setTitle(target.value)}
+            changeAuthor={({ target }) => setAuthor(target.value)}
+            changeUrl={({ target }) => setUrl(target.value)}
+          />
+        </Togglable>
+        {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+          <Blog key={blog.id} blog={blog} user={user} blogs={blogs} setBlogs={setBlogs}/>
+        )}
+      </div>
     </div>
   )
 }
