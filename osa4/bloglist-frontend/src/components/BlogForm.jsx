@@ -18,6 +18,7 @@ const BlogForm = ({
               type="type"
               value={title}
               onChange={changeTitle}
+              placeholder='write title here'
             />
           </label>
         </div>
@@ -28,6 +29,7 @@ const BlogForm = ({
               type="type"
               value={author}
               onChange={changeAuthor}
+              placeholder='write author here'
             />
           </label>
         </div>
@@ -38,6 +40,7 @@ const BlogForm = ({
               type="type"
               value={url}
               onChange={changeUrl}
+              placeholder='write url here'
             />
           </label>
         </div>
