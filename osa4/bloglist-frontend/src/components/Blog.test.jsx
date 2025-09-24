@@ -47,3 +47,19 @@ test('clicking the button makes user visible', async () => {
   const element = screen.getByText('mina', { exact: false })
   expect(element).toBeVisible()
 })
+
+test('when like pressed twice, function called twice', async () => {
+  const mockHandler = vi.fn()
+  render(<Blog user={'mina'} blog={blog} like={mockHandler}/>)
+
+  const user = userEvent.setup()
+  const button = screen.getByText('view')
+  await user.click(button)
+
+  const likeButton = screen.getByText('like')
+  await user.click(likeButton)
+  await user.click(likeButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
+  
+})

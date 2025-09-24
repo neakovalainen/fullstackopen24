@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, user, blogs, setBlogs }) => {
+const Blog = ({ blog, user, blogs, setBlogs, ...mocks }) => {//...mocks lisätty vain testien avuksi
   const [showAll, setShowAll] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
 
@@ -45,7 +45,7 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
         </button>
       </div>
     )
-  return (
+  return (//mocks.like käytössä vain testeissä
     <div className="blogstyle">
       <p>{blog.title}, by: {blog.author}
         <button onClick={toggleShow}>
@@ -54,7 +54,7 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
       </p>
       <p>url: {blog.url}</p>
       <p>likes: {likes}</p>
-      <button onClick={like}>like</button>
+      <button onClick={mocks.like ?? like}>like</button>
       <p>{blog.user.username}</p>
       {
         blog.user.username === user.username
