@@ -55,7 +55,7 @@ describe('Blog app', () => {
 
       await page.getByRole('button', { name: 'login' }).click()
     })
-    test('user can create a blog', async ({ page })=> {
+    test('user can create a blog', async ({ page }) => {
       await page.getByRole('button', { name: 'new blog'}).click()
 
       await page.getByLabel('title:').fill('how to eep?')
@@ -63,6 +63,18 @@ describe('Blog app', () => {
       await page.getByLabel('url:').fill('www.funtime.g')
       await page.getByRole('button', { name: 'create blog'}).click()
       expect(page.getByText('how to eep?')).toBeVisible()
+    })
+    test('user can like a blog', async ({ page }) => {
+      await page.getByRole('button', { name: 'new blog'}).click()
+
+      await page.getByLabel('title:').fill('how to eep?')
+      await page.getByLabel('author:').fill('salainen kirjailija')
+      await page.getByLabel('url:').fill('www.funtime.g')
+      await page.getByRole('button', { name: 'create blog'}).click()
+
+      await page.getByRole('button', { name: 'view'}).click()
+      await page.getByRole('button', { name: 'like'}).click()
+      expect(page.getByText('likes: 1')).toBeVisible()
     })
   })
 })
