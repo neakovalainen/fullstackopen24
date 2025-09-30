@@ -76,7 +76,7 @@ const App = () => {
     try {
       const blog = await blogService.create({ title, author, url })
       setBlogs(blogs.concat(blog))
-      setConfirmation(`blog: '${title}' has been created successfully<33`)
+      setConfirmation(`a new blog has been created successfully<33`)
       setTimeout(() => {
         setConfirmation(null)
       }, 5000)
@@ -136,7 +136,7 @@ const App = () => {
       <Error message={error} />
       <div>
         <h1>blogs</h1>
-        <p> {user.username} has logged in</p>
+        <p> {user.name} has logged in</p>
         <form onSubmit={(event) => handleLogout(event)}>
           <button type="submit">log out</button>
         </form>
