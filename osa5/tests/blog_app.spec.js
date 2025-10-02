@@ -1,7 +1,7 @@
 // @ts-check
 // @ts-ignore-next-line
 import { test, expect, beforeEach, describe } from '@playwright/test'
-
+const { loginWith, createBlog } = require('./helper')
 
 describe('Blog app', () => {
   // @ts-ignore
@@ -24,23 +24,13 @@ describe('Blog app', () => {
   })
   describe('Log in', () => {
     test('user can log in with mluukkai', async ({ page }) => {
-      await page.getByRole('button', { name: 'login' }).click()
-
-      await page.getByLabel('username').fill('mluukkai')
-      await page.getByLabel('password').fill('salainen')
-
-      await page.getByRole('button', { name: 'login' }).click()
+      await loginWith(page, 'mluukkai', 'salainen')
 
       await expect(page.getByText('Matti Luukkainen has logged in')).toBeVisible()
     })
 
     test('user cannot log in with wrong username', async ({ page }) => {
-      await page.getByRole('button', { name: 'login' }).click()
-
-      await page.getByLabel('username').fill('mlukkai')
-      await page.getByLabel('password').fill('salainen')
-
-      await page.getByRole('button', { name: 'login' }).click()
+      await loginWith(page, 'mluuuukkai', 'salainen')
 
       await expect(page.getByText('wrong credentials oh noh')).toBeVisible()
     })
@@ -48,32 +38,18 @@ describe('Blog app', () => {
   describe('when user logged in can', () => {
     // @ts-ignore
     beforeEach(async ({ page }) => {
-      await page.getByRole('button', { name: 'login' }).click()
-
-      await page.getByLabel('username').fill('mluukkai')
-      await page.getByLabel('password').fill('salainen')
-
-      await page.getByRole('button', { name: 'login' }).click()
+      await loginWith(page, 'mluukkai', 'salainen')
     })
 
     test('user can create a blog', async ({ page })=> {
-      await page.getByRole('button', { name: 'new blog'}).click()
+      await createBlog(page, 'how to eep?', 'salainen kirjailija', 'www.funtime.g')
 
-      await page.getByLabel('title:').fill('how to eep?')
-      await page.getByLabel('author:').fill('salainen kirjailija')
-      await page.getByLabel('url:').fill('www.funtime.g')
-      await page.getByRole('button', { name: 'create blog'}).click()
       await expect(page.getByText('how to eep?')).toBeVisible()
     })
 
 
     test('user can like a blog', async ({ page }) => {
-      await page.getByRole('button', { name: 'new blog'}).click()
-
-      await page.getByLabel('title:').fill('how to eep?')
-      await page.getByLabel('author:').fill('salainen kirjailija')
-      await page.getByLabel('url:').fill('www.funtime.g')
-      await page.getByRole('button', { name: 'create blog'}).click()
+      await createBlog(page, 'how to eep?', 'salainen kirjailija', 'www.funtime.g')
 
       await page.getByRole('button', { name: 'view'}).click()
       await page.getByRole('button', { name: 'like'}).click()
@@ -81,12 +57,7 @@ describe('Blog app', () => {
     })
 
     test('user can delete their own blog', async ({ page }) => {
-      await page.getByRole('button', { name: 'new blog'}).click()
-
-      await page.getByLabel('title:').fill('how to eep?')
-      await page.getByLabel('author:').fill('salainen kirjailija')
-      await page.getByLabel('url:').fill('www.funtime.g')
-      await page.getByRole('button', { name: 'create blog'}).click()
+      await createBlog(page, 'how to eep?', 'salainen kirjailija', 'www.funtime.g')
 
       await page.getByRole('button', { name: 'view'}).click()
 
@@ -98,12 +69,7 @@ describe('Blog app', () => {
     })
 
     test('user cannot delete other users blogs', async ({ page, request }) => {
-      await page.getByRole('button', { name: 'new blog'}).click()
-
-      await page.getByLabel('title:').fill('how to eep?')
-      await page.getByLabel('author:').fill('salainen kirjailija')
-      await page.getByLabel('url:').fill('www.funtime.g')
-      await page.getByRole('button', { name: 'create blog'}).click()
+      await createBlog(page, 'how to eep?', 'salainen kirjailija', 'www.funtime.g')
 
       await page.getByRole('button', { name: 'log out' }).click()
       await request.post('http://localhost:3003/api/users', {
@@ -113,42 +79,31 @@ describe('Blog app', () => {
         password: 'maumau'
       }
       })
-    await page.goto('http://localhost:5173')
-    await page.getByRole('button', { name: 'login' }).click()
-
-    await page.getByLabel('username').fill('mau')
-    await page.getByLabel('password').fill('maumau')
-
-    await page.getByRole('button', { name: 'login' }).click()
-    await page.getByRole('button', { name: 'view'}).click()
-    await expect(page.getByText('delete blog')).not.toBeVisible()
+      await page.goto('http://localhost:5173')
+      await loginWith(page, 'mau', 'maumau')
+      await page.getByRole('button', { name: 'view'}).click()
+      await expect(page.getByText('delete blog')).not.toBeVisible()
     })
 
-    test('blogs are sorted correctly (most liked on top', async ({ page }) => {
-      await page.getByRole('button', { name: 'new blog'}).click()
-      await page.getByLabel('title:').fill('how to eep?')
-      await page.getByLabel('author:').fill('salainen kirjailija')
-      await page.getByLabel('url:').fill('www.funtime.g')
-      await page.getByRole('button', { name: 'create blog' }).click()
+    test('blogs are sorted correctly (most liked on top)', async ({ page }) => {
+      await createBlog(page, 'how to eep?', 'salainen kirjailija', 'www.funtime.g')
       await expect(page.getByText('how to eep?')).toBeVisible()
       await page.getByRole('button', { name: 'cancel'}).click()
-
-      await page.getByRole('button', { name: 'new blog'}).click()
-      await page.getByLabel('title:').fill('secrets of eeping')
-      await page.getByLabel('author:').fill('nobody knows?')
-      await page.getByLabel('url:').fill('www.notgoodtime.eehheeh')
-      await page.getByRole('button', { name: 'create blog'}).click()
+      await createBlog(page, 'secrets of eeping', 'nobody knows?', 'www.notgoodtime.eehheeh')
 
       await page.getByText('how to eep?').getByRole('button', { name: 'view' }).click()
       await page.getByRole('button', { name: 'like' }).click()
+      await expect(page.getByText('likes: 1')).toBeVisible()
       await page.getByRole('button', { name: 'like' }).click()
       await page.getByRole('button', { name: 'hide' }).click()
 
       await page.getByText('secrets of eeping').getByRole('button', { name: 'view' }).click()
       await page.getByRole('button', { name: 'like' }).click()
+      await expect(page.getByText('likes: 1')).toBeVisible()
       await page.getByRole('button', { name: 'like' }).click()
+      await expect(page.getByText('likes: 2')).toBeVisible()
       await page.getByRole('button', { name: 'like' }).click()
-      await page.getByRole('button', { name: 'like' }).click()
+      await expect(page.getByText('likes: 3')).toBeVisible()
       await page.getByRole('button', { name: 'hide' }).click()
 
       const viewButtons = await page.getByRole('button', { name: 'view' }).all()
