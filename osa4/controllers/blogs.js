@@ -18,6 +18,7 @@ blogRouter.post('/', middleware.userExtractor, async (request, response) => {
     return response.status(401).json({ error: 'token invalid'})
   }
   const user = request.user
+  console.log('kayttaja', user)
 
   if (!user) {
     return response.status(400).json({ error: 'userId missing or not valid '})
@@ -41,11 +42,11 @@ blogRouter.post('/', middleware.userExtractor, async (request, response) => {
     likes: body.likes || 0,
     user: user._id
   })
-
+  blog.populate('user', {username: 1, name: 1})
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-  response.status(201).json(savedBlog)
+  return response.status(201).json(savedBlog)
 })
 
 blogRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
@@ -62,6 +63,7 @@ blogRouter.delete('/:id', middleware.userExtractor, async (request, response) =>
   console.log('täs blogi', blog)
   console.log(blog.user)
   if (blog.user.toString() === user.id.toString()) {
+    console.log('userid', user.id)
     await Blog.findByIdAndDelete(request.params.id)
     return response.status(204).end()
   } else {

@@ -31,7 +31,7 @@ const Blog = ({ blog, user, blogs, setBlogs, ...mocks }) => {//...mocks lisätty
         await blogService.remove({ id: blog.id })
         setBlogs(blogs.filter(blogToFilter => blogToFilter.id !== blog.id))
       } catch {
-        console.log('error when deletings')
+        console.log('error when deleting')
       }
     }
   }
@@ -40,7 +40,7 @@ const Blog = ({ blog, user, blogs, setBlogs, ...mocks }) => {//...mocks lisätty
     return (
       <div>
         {blog.title} {blog.author}
-        <button onClick={toggleShow}>
+        <button type="submit" onClick={toggleShow}>
           view
         </button>
       </div>
