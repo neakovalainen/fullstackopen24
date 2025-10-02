@@ -95,5 +95,32 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'delete blog'}).click()
       await expect(page.getByText('how to eep?')).not.toBeVisible()
     })
+    test('user cannot delete other users blogs', async ({ page, request }) => {
+      await page.getByRole('button', { name: 'new blog'}).click()
+
+      await page.getByLabel('title:').fill('how to eep?')
+      await page.getByLabel('author:').fill('salainen kirjailija')
+      await page.getByLabel('url:').fill('www.funtime.g')
+      await page.getByRole('button', { name: 'create blog'}).click()
+
+      await page.getByRole('button', { name: 'log out' }).click()
+      await request.post('http://localhost:3003/api/users', {
+      data: {
+        name: 'miumiu',
+        username: 'mau',
+        password: 'maumau'
+      }
+      })
+    await page.goto('http://localhost:5173')
+    await page.getByRole('button', { name: 'login' }).click()
+
+    await page.getByLabel('username').fill('mau')
+    await page.getByLabel('password').fill('maumau')
+
+    await page.getByRole('button', { name: 'login' }).click()
+    await page.getByRole('button', { name: 'view'}).click()
+    await expect(page.getByText('delete blog')).not.toBeVisible()
+
+    })
   })
 })
